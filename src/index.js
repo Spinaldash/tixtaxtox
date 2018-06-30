@@ -29,14 +29,15 @@ class Board extends React.Component {
   }
   
   this.stamp = function(i) {
+    const tempSquares = this.state.squares.slice();
     let currentStamp = this.state.turnOwner;
-    this.state.squares[i] = currentStamp;
+    tempSquares[i] = currentStamp;
     if (currentStamp === 'X') {
       this.state.turnOwner = 'O'
     } else {
       this.state.turnOwner = 'X'
     }
-    this.setState ({squares: this.state.squares});
+    this.setState ({squares: tempSquares});
     
   }
 }
