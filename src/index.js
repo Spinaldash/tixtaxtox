@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {calculateWinner} from './app/helpers/helpers.js'
 
 function Square(props) {
     return (
       <button className='square'
-        onClick={() => {props.onClick}}
+        onClick={props.onClick}
       >
         {props.value}
       </button>
@@ -18,37 +19,31 @@ class Board extends React.Component {
   super(props);
   this.state = {
     squares: Array(9).fill(null),
-    turnOwner: "O"
+    xIsNext: true
   };
   this.handleClick = function(i){
-    console.log('HandleClick')
-    console.log('this.state: ', this.state)
-    console.log('i: ', i)
     this.state.squares[i] ? console.log('this is filled space: ', this.state.squares[i]) : this.stamp(i)
   }
-  
+
   this.stamp = function(i) {
     const tempSquares = this.state.squares.slice();
-    let currentStamp = this.state.turnOwner;
-    tempSquares[i] = currentStamp;
-    if (currentStamp === 'X') {
-      this.state.turnOwner = 'O'
-    } else {
-      this.state.turnOwner = 'X'
-    }
-    this.setState ({squares: tempSquares});
-    
+    tempSquares[i] = this.state.xIsNext ? "X" : "O"
+    this.setState ({
+      squares: tempSquares,
+      xIsNext: !this.state.xIsNext
+    });
+
   }
 }
   renderSquare(i) {
-    return <Square 
+    return <Square
       value={this.state.squares[i]}
-      onClick={() => this.handleClick(i)} 
+      onClick={() => this.handleClick(i)}
     />;
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? "X" : "O");
 
     return (
       <div>
