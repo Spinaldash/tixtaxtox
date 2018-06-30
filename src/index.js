@@ -16,25 +16,26 @@ function Square(props) {
 
 class Board extends React.Component {
   constructor(props) {
-  super(props);
-  this.state = {
-    squares: Array(9).fill(null),
-    xIsNext: true
-  };
-  this.handleClick = function(i){
-    this.state.squares[i] ? console.log('this is filled space: ', this.state.squares[i]) : this.stamp(i)
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+      xIsNext: true
+    };
   }
-
-  this.stamp = function(i) {
+  handleClick(i) {
+    // Return early if there is a winner or on an already stamped square
+    if (calculateWinner(this.state.squares) || this.state.squares[i]) {
+      return;
+    }
+    // Stamp & switch turn logic
     const tempSquares = this.state.squares.slice();
     tempSquares[i] = this.state.xIsNext ? "X" : "O"
     this.setState ({
       squares: tempSquares,
       xIsNext: !this.state.xIsNext
     });
-
   }
-}
+  
   renderSquare(i) {
     return <Square
       value={this.state.squares[i]}
@@ -43,7 +44,9 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: ' + (this.state.xIsNext ? "X" : "O");
+    let status;
+    let winner = calculateWinner(this.state.squares)
+    winner ? status =  (winner + ' is the winner!') : status = 'Next player: ' + (this.state.xIsNext ? "X" : "O");
 
     return (
       <div>
