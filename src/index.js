@@ -3,27 +3,48 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: null,
-    };
-  }
-
   render() {
     return (
       <button className="square" 
-        onClick={() => { this.setState({value: 'X'})} }
+        onClick={() => { this.props.onClick()} }
       >
-        {this.state.value}
+        {this.props.value}
       </button>
     )
   }
 }
 
 class Board extends React.Component {
+  constructor(props) {
+  super(props);
+  this.state = {
+    squares: Array(9).fill(null),
+    turnOwner: "O"
+  };
+  this.handleClick = function(i){
+    console.log('HandleClick')
+    console.log('this.state: ', this.state)
+    console.log('i: ', i)
+    this.state.squares[i] ? console.log('this is filled space: ', this.state.squares[i]) : this.stamp(i)
+  }
+  
+  this.stamp = function(i) {
+    let currentStamp = this.state.turnOwner;
+    this.state.squares[i] = currentStamp;
+    if (currentStamp === 'X') {
+      this.state.turnOwner = 'O'
+    } else {
+      this.state.turnOwner = 'X'
+    }
+    this.setState ({squares: this.state.squares});
+    
+  }
+}
   renderSquare(i) {
-    return <Square value={i} />;
+    return <Square 
+      value={this.state.squares[i]}
+      onClick={() => this.handleClick(i)} 
+    />;
   }
 
   render() {
